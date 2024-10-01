@@ -38,20 +38,25 @@ jobs:
           python --version
           echo "Step 1: Installing schemachange"
           pip install schemachange
-
-          echo "Step 2: Downloading and Installing SnowSQL"
-          curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-linux_x86_64.gz
-          gunzip snowsql-linux_x86_64.gz
-          chmod +x snowsql-linux_x86_64
-          
-          # Move the SnowSQL binary to a location in the PATH
-          mv snowsql-linux_x86_64 /tmp/snowsql
-          echo "Step 3: Configuring SnowSQL"
-          /tmp/snowsql -v
-          
+        
           echo "Step 4: Running schemachange"
           schemachange -f $GITHUB_WORKSPACE/migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
 
+
+
+      - name: Install SnowSQL
+        run: |
+          echo "Step 1: Downloading SnowSQL DEB package"
+          curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowflake-sqlcli_1.2.34-1_amd64.deb
+
+          echo "Step 2: Installing SnowSQL"
+          sudo dpkg -i snowflake-sqlcli_1.2.34-1_amd64.deb
+
+          echo "Step 3: Fixing dependencies (if any)"
+          sudo apt-get install -f
+
+          echo "Step 4: Verifying SnowSQL installation"
+          snowsql -v
 
       # Step 4: Verification step - Execute verification script
       - name: Verify Schema Changes
