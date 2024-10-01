@@ -43,10 +43,11 @@ jobs:
           curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-linux_x86_64.gz
           gunzip snowsql-linux_x86_64.gz
           chmod +x snowsql-linux_x86_64
-          sudo mv snowsql-linux_x86_64 /usr/local/bin/snowsql
           
+          # Move the SnowSQL binary to a location in the PATH
+          mv snowsql-linux_x86_64 /tmp/snowsql
           echo "Step 3: Configuring SnowSQL"
-          snowsql -v
+          /tmp/snowsql -v
           
           echo "Step 4: Running schemachange"
           schemachange -f $GITHUB_WORKSPACE/migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
