@@ -38,9 +38,17 @@ jobs:
           python --version
           echo "Step 1: Installing schemachange"
           pip install schemachange
-          pip install snowflake-cli-labs
+
+          echo "Step 2: Downloading and Installing SnowSQL"
+          curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-linux_x86_64.gz
+          gunzip snowsql-linux_x86_64.gz
+          chmod +x snowsql-linux_x86_64
+          sudo mv snowsql-linux_x86_64 /usr/local/bin/snowsql
           
-          echo "Step 2: Running schemachange"
+          echo "Step 3: Configuring SnowSQL"
+          snowsql -v
+          
+          echo "Step 4: Running schemachange"
           schemachange -f $GITHUB_WORKSPACE/migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
 
 
@@ -53,21 +61,13 @@ jobs:
           SF_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
           SF_DATABASE: ${{ secrets.SF_DATABASE }}
           SNOWFLAKE_PASSWORD: ${{ secrets.SF_PASSWORD }}
-        run: |
-
-          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
-          python --version
-          echo "Step 2: Installing SnowSQL via apt"
-          sudo apt-get update
-          sudo apt-get install -y snowsql
-
-          echo "Step 3: Executing verification script"
+        run: | 
+          echo "Step 4: Executing verification script"
           snowsql -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -f $GITHUB_WORKSPACE/verify/script.sql
           VERIFY_RESULT=$?
           
-          # Check if verification succeeded
           if [ $VERIFY_RESULT -ne 0 ]; then
             echo "Verification failed. Rolling back..."
-            exit 1  # Exit with failure to trigger rollback
+            exit 1
           fi
           echo "Schema changes verified successfully."
