@@ -64,7 +64,7 @@ jobs:
           SNOWFLAKE_PASSWORD: ${{ secrets.SF_PASSWORD }}
         run: | 
           echo "Step 4: Executing verification script"
-          snow sql --filename$GITHUB_WORKSPACE/verify/script.sql
+          snow sql --filename $GITHUB_WORKSPACE/verify/script.sql
           VERIFY_RESULT=$?
           
           if [ $VERIFY_RESULT -ne 0 ]; then
