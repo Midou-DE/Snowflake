@@ -24,6 +24,9 @@ jobs:
         uses: actions/setup-python@v2.2.1
         with:
           python-version: 3.8.x
+          sudo apt update
+          sudo apt install pipx
+          pipx ensurepath
 
       - name: Run schemachange
         env:
@@ -46,26 +49,9 @@ jobs:
 
       - name: Install SnowSQL
         run: |
-          echo "Step 1: Downloading SnowSQL"
-          
-          echo "Downloading SnowSQL"
-          curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.3/linux_x86_64/snowsql-1.3.2-linux_x86_64.bash
-
-          echo "Downloading the public key"
-          gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys 630D9F3CAB551AF3
-
-          echo "Verify the signature"
-          # If you prefer to use curl to download the signature file, run this command:
-          curl -O \https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.3/linux_x86_64/snowsql-1.3.2-linux_x86_64.bash.sig
-
-          # Verify the package signature.
-          gpg --verify snowsql-1.3.2-linux_x86_64.bash.sig snowsql-1.3.2-linux_x86_64.bash
-
-          echo "install the snowsql"
-          bash snowsql-1.3.2-linux_x86_64.bash
-
-          echo "check the version"
-          snowsql -v
+        echo "install snow sql"
+        pipx install snowflake-cli-labs
+        echo " installation succed"
 
       # Step 4: Verification step - Execute verification script
       - name: Verify Schema Changes
