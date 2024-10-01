@@ -57,8 +57,9 @@ jobs:
 
           echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
           python --version
-          echo "Step 2: Installing SnowSQL"
-          curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-linux_x86_64
+          echo "Step 2: Downloading and Installing SnowSQL"
+          curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowsql-linux_x86_64.gz
+          gunzip snowsql-linux_x86_64.gz
           chmod +x snowsql-linux_x86_64
           sudo mv snowsql-linux_x86_64 /usr/local/bin/snowsql
 
