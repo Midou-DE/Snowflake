@@ -47,7 +47,7 @@ jobs:
       - name: Install SnowSQL
         run: |
           echo "Step 1: Downloading SnowSQL DEB package"
-          curl -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowflake-sqlcli_1.2.34-1_amd64.deb
+          curl -L -O https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.2/linux_x86_64/snowflake-sqlcli_1.2.34-1_amd64.deb
 
           echo "Step 2: Installing SnowSQL"
           sudo dpkg -i snowflake-sqlcli_1.2.34-1_amd64.deb
