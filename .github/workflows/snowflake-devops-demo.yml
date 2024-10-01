@@ -49,9 +49,9 @@ jobs:
 
       - name: Install SnowSQL
         run: |
-        echo "install snow sql"
-        pipx install snowflake-cli-labs
-        echo " installation succed"
+          echo "install snow sql"
+          pipx install snowflake-cli-labs
+          echo " installation succed"
 
       # Step 4: Verification step - Execute verification script
       - name: Verify Schema Changes
