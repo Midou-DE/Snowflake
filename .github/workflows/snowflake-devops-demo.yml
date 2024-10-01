@@ -24,9 +24,6 @@ jobs:
         uses: actions/setup-python@v2.2.1
         with:
           python-version: 3.8.x
-          sudo apt update
-          sudo apt install pipx
-          pipx ensurepath
 
       - name: Run schemachange
         env:
@@ -49,6 +46,9 @@ jobs:
 
       - name: Install SnowSQL
         run: |
+          sudo apt update
+          sudo apt install pipx
+          pipx ensurepath
           echo "install snow sql"
           pipx install snowflake-cli-labs
           echo " installation succed"
