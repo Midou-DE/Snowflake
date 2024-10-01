@@ -60,11 +60,8 @@ jobs:
 
           # Verify the package signature.
           gpg --verify snowsql-1.3.2-linux_x86_64.bash.sig snowsql-1.3.2-linux_x86_64.bash
-          
-          echo "Verify the key"
-          gpg --delete-key "Snowflake Computing"
 
-          echp "Inshal the snowsql"
+          echp "install the snowsql"
           bash snowsql-linux_x86_64.bash
 
           echo "check the version"
