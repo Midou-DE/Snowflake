@@ -54,6 +54,12 @@ jobs:
           SF_DATABASE: ${{ secrets.SF_DATABASE }}
           SNOWFLAKE_PASSWORD: ${{ secrets.SF_PASSWORD }}
         run: |
+
+          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+          python --version
+          echo "Step 1: Installing Snowflake CLI"
+          pip install snowflake-cli-labs
+
           echo "Step 3: Executing verification script"
           snowsql -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -f $GITHUB_WORKSPACE/verify/script.sql
           VERIFY_RESULT=$?
