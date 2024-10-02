@@ -64,18 +64,24 @@ jobs:
           SNOWFLAKE_PASSWORD: ${{ secrets.SF_PASSWORD }}
         run: | 
           echo "Step 4: Executing verification script"
-          snow sql --filename $GITHUB_WORKSPACE/verify/script.sql -x --account=$SF_ACCOUNT --user=$SF_USERNAME --password=$SNOWFLAKE_PASSWORD --role=$SF_ROLE --warehouse=$SF_WAREHOUSE --database=$SF_DATABASE
-          VERIFY_RESULT=$?
-          
-          if [ $VERIFY_RESULT -ne 0 ]; then
-            echo "Verification failed. Rolling back..."
-            exit 1
-          fi
-          echo "Schema changes verified successfully."
-
-      # Handle Git Revert
-      - name: Handle Git Revert
-        if: github.event.action == 'revert'
-        run: |
-          echo "A revert was detected. Running rollback migrations."
-          schemachange -f $GITHUB_WORKSPACE/revert -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE --rollback
+              # Loop through all .sql files in the verify directory
+      
+          for script in $GITHUB_WORKSPACE/verify/*.sql; do
+            echo "Executing $script..."
+            snow sql --filename "$script" -x \
+              --account="$SF_ACCOUNT" \
+              --user="$SF_USERNAME" \
+              --password="$SNOWFLAKE_PASSWORD" \
+              --role="$SF_ROLE" \
+              --warehouse="$SF_WAREHOUSE" \
+              --database="$SF_DATABASE"
+            
+            # Capture the result of the execution
+            VERIFY_RESULT=$?
+            
+            if [ $VERIFY_RESULT -ne 0 ]; then
+              echo "Verification failed for $script. Rolling back..."
+              exit 1
+            fi
+            echo "Schema changes verified successfully for $script."
+          done
