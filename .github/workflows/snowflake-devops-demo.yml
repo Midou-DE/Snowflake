@@ -72,3 +72,10 @@ jobs:
             exit 1
           fi
           echo "Schema changes verified successfully."
+
+      # Handle Git Revert
+      - name: Handle Git Revert
+        if: github.event.action == 'revert'
+        run: |
+          echo "A revert was detected. Running rollback migrations."
+          schemachange -f $GITHUB_WORKSPACE/revert -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE --rollback
