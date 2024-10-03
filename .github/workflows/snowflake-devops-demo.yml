@@ -66,7 +66,7 @@ jobs:
           echo "Step 4: Executing verification script"
               # Loop through all .sql files in the verify directory
       
-          for script in $GITHUB_WORKSPACE/verify/*.sql; do
+          for script in $(find "$GITHUB_WORKSPACE/verify" -name '*.sql'); do
             echo "Executing $script..."
             snow sql --filename "$script" -x \
               --account="$SF_ACCOUNT" \
