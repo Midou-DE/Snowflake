@@ -1,0 +1,2 @@
+USE SCHEMA Colugel;
+SELECT * FROM  Colugel_TABLE;
